@@ -150,7 +150,7 @@
 
         .app-viewport-wrapper {
             position: relative;
-            background-color: #000;
+            background-color: #0f172a;
             border-radius: 12px;
             border: 1px solid var(--border-color);
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
@@ -164,8 +164,8 @@
             width: 1280px;
             height: 800px;
             position: relative;
-            background: #141c2e;
-            transform-origin: top center;
+            background: #0f172a;
+            transform-origin: top left;
         }
 
         /* Loading / Splash Overlay */
@@ -178,7 +178,7 @@
             align-items: center;
             justify-content: center;
             z-index: 50;
-            transition: opacity 0.4s ease, visibility 0.4s ease;
+            transition: opacity 0.5s ease, visibility 0.5s ease;
             padding: 30px;
             text-align: center;
         }
@@ -252,11 +252,29 @@
             font-size: 13px;
             color: var(--text-muted);
             margin-top: 10px;
+            margin-bottom: 14px;
         }
 
         .credentials-box span {
             color: var(--text-main);
             font-weight: 600;
+        }
+
+        .dismiss-btn {
+            background: transparent;
+            color: var(--accent-blue);
+            border: 1px solid rgba(56, 189, 248, 0.4);
+            padding: 6px 14px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .dismiss-btn:hover {
+            background: rgba(56, 189, 248, 0.15);
+            color: white;
         }
 
         /* Technical Highlights Footer */
@@ -332,6 +350,7 @@
                     <br>
                     <small>Or click "Register as Donor" inside the window for voluntary registration.</small>
                 </div>
+                <button class="dismiss-btn" onclick="hideSplash()">Click to reveal application window</button>
             </div>
 
             <!-- CheerpJ Swing Display Mount -->
@@ -358,8 +377,20 @@
         const splashScreen = document.getElementById("splash-screen");
         const container = document.getElementById("cheerpj-container");
         const wrapper = document.getElementById("viewport-wrapper");
+        let isSplashHidden = false;
 
-        // Responsive scaler: scale Swing 1280x800 resolution to fit smaller client viewports
+        // Dismiss splash screen smoothly
+        function hideSplash() {
+            if (isSplashHidden) return;
+            isSplashHidden = true;
+            splashScreen.style.opacity = "0";
+            splashScreen.style.pointerEvents = "none";
+            setTimeout(() => {
+                splashScreen.style.display = "none";
+            }, 500);
+        }
+
+        // Responsive scaler: dynamically scale Swing 1280x800 resolution to fit client viewport
         function adjustScale() {
             const marginX = 40;
             const marginY = 180;
@@ -389,6 +420,17 @@
             }
         }
 
+        // Watch for CheerpJ attaching canvas elements to DOM
+        const observer = new MutationObserver((mutations, obs) => {
+            const canvas = container.querySelector("canvas");
+            if (canvas) {
+                console.log("CheerpJ canvas mounted in DOM:", canvas);
+                setTimeout(hideSplash, 1200);
+                obs.disconnect();
+            }
+        });
+        observer.observe(container, { childList: true, subtree: true });
+
         // CheerpJ 3.0 In-Browser Java Execution
         async function runApplication() {
             try {
@@ -408,16 +450,18 @@
 
                 console.log("Loading JAR from virtual path:", jarPath);
 
-                // Run executable JAR
-                await cheerpjRunJar(jarPath);
+                // IMPORTANT: Do NOT await cheerpjRunJar!
+                // Swing applications run continuous Event Dispatch Threads and do not exit.
+                // Awaiting cheerpjRunJar would block JS execution indefinitely.
+                cheerpjRunJar(jarPath).then((code) => {
+                    console.log("Java Application exited with code:", code);
+                }).catch((err) => {
+                    console.error("Java Runtime Error:", err);
+                    statusText.innerHTML = `<span style="color: #ef4444;">Runtime Error: ${err.message || err}</span>`;
+                });
 
-                // Hide splash after GUI renders
-                setTimeout(() => {
-                    splashScreen.style.opacity = "0";
-                    setTimeout(() => {
-                        splashScreen.style.display = "none";
-                    }, 400);
-                }, 1200);
+                // Safety fallback: reveal application canvas after 3.5 seconds if canvas already rendered
+                setTimeout(hideSplash, 3500);
 
             } catch (err) {
                 console.error("CheerpJ Execution Error:", err);
