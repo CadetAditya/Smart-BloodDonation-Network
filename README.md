@@ -1,11 +1,17 @@
 # 🩸 Smart Blood Donation Network
 
-![Java](https://img.shields.io/badge/Java-17%2B-ED8B00?style=for-the-badge&logo=openjdk&logoColor=white)
+[![Live Demo](https://img.shields.io/badge/Live_Demo-Open_in_Browser-E11D48?style=for-the-badge&logo=googlechrome&logoColor=white)](https://cadetaditya.github.io/Smart-BloodDonation-Network/docs/)
+![Java](https://img.shields.io/badge/Java-8%20to%2025-ED8B00?style=for-the-badge&logo=openjdk&logoColor=white)
 ![Swing](https://img.shields.io/badge/GUI-Java%20Swing-blue?style=for-the-badge)
+![WebAssembly](https://img.shields.io/badge/WebAssembly-CheerpJ%203.0-654FF0?style=for-the-badge)
 ![DSA](https://img.shields.io/badge/Architecture-Data%20Structures%20%26%20Algorithms-crimson?style=for-the-badge)
 ![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)
 
 A modern, high-performance desktop blood bank and emergency matching network built with **Java Swing** and custom dark-themed UI components. The system is engineered around core **Data Structures & Algorithms (DSA)** to guarantee $\mathcal{O}(1)$ donor lookups, prioritized emergency resolution, and multi-structure rollback operations.
+
+> 🌐 **Live In-Browser Demo**: You can run and interact with the full Java Swing desktop GUI directly in your web browser via WebAssembly (CheerpJ 3.0) without installing Java:  
+> **👉 [Launch Live App in Browser](https://cadetaditya.github.io/Smart-BloodDonation-Network/docs/)**  
+> *(Admin credentials — Username: `admin` | Password: `password`)*
 
 ---
 
@@ -113,3 +119,4 @@ Smart Blood donation/
 
 ## 📄 License
 This project is open-source and available under the [MIT License](LICENSE).
+
