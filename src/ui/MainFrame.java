@@ -41,6 +41,7 @@ public class MainFrame extends JFrame {
         setSize(1280, 800);
         setMinimumSize(new Dimension(1024, 768));
         setLocationRelativeTo(null);
+        setExtendedState(JFrame.MAXIMIZED_BOTH);
         getContentPane().setBackground(Theme.BG_DARK);
         
         cardLayout = new CardLayout();

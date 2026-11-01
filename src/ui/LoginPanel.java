@@ -99,6 +99,9 @@ public class LoginPanel extends JPanel {
         errorLabel.setForeground(Theme.COLOR_CRITICAL);
         errorLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         
+        userField.addActionListener(e -> passField.requestFocusInWindow());
+        passField.addActionListener(e -> loginBtn.doClick());
+
         loginBtn.addActionListener(e -> {
             String user = userField.getText().trim();
             String pass = new String(passField.getPassword()).trim();
@@ -119,5 +122,12 @@ public class LoginPanel extends JPanel {
         card.add(errorLabel);
         
         add(card);
+
+        SwingUtilities.invokeLater(() -> {
+            JRootPane root = SwingUtilities.getRootPane(loginBtn);
+            if (root != null) {
+                root.setDefaultButton(loginBtn);
+            }
+        });
     }
 }

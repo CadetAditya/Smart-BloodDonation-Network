@@ -155,17 +155,18 @@
             border: 1px solid var(--border-color);
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
             overflow: hidden;
+            width: 100%;
+            max-width: 1400px;
+            height: calc(100vh - 150px);
+            min-height: 600px;
             display: flex;
-            align-items: center;
-            justify-content: center;
         }
 
         #cheerpj-container {
-            width: 1280px;
-            height: 800px;
+            width: 100%;
+            height: 100%;
             position: relative;
             background: #0f172a;
-            transform-origin: top left;
         }
 
         /* Loading / Splash Overlay */
@@ -390,26 +391,6 @@
             }, 500);
         }
 
-        // Responsive scaler: dynamically scale Swing 1280x800 resolution to fit client viewport
-        function adjustScale() {
-            const marginX = 40;
-            const marginY = 180;
-            const availW = Math.max(320, window.innerWidth - marginX);
-            const availH = Math.max(320, window.innerHeight - marginY);
-
-            const scaleW = availW / 1280;
-            const scaleH = availH / 800;
-            const scale = Math.min(1.0, Math.min(scaleW, scaleH));
-
-            wrapper.style.width = `${Math.round(1280 * scale)}px`;
-            wrapper.style.height = `${Math.round(800 * scale)}px`;
-            container.style.transform = `scale(${scale})`;
-            container.style.transformOrigin = "top left";
-        }
-
-        window.addEventListener("resize", adjustScale);
-        adjustScale();
-
         function toggleFullscreen() {
             if (!document.fullscreenElement) {
                 wrapper.requestFullscreen().catch(err => {
@@ -440,7 +421,8 @@
                 });
 
                 statusText.innerText = "Creating Java Swing Graphical Canvas...";
-                cheerpjCreateDisplay(1280, 800, container);
+                // Use -1, -1 to fit parent container bounds without CSS scaling distortion
+                cheerpjCreateDisplay(-1, -1, container);
 
                 statusText.innerText = "Mounting Application Bytecode & Launching...";
                 
